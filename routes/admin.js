@@ -31,6 +31,35 @@ router.get('/users', function(req, res) {
   });
 });
 
+router.post('/addbook', function(req, res) {
+  if(!req.form.isValid) {
+    res.render('admin/addbooks');
+  } else {
+    var title = req.body.title;
+    var author = req.body.author;
+    var description = req.body.description;
+    var isbn = req.body.isbn;
+    var quantity = req.body.quantity;
+    var category = req.body.category;
+    db.ref('books/').set({
+        title: title,
+        author: author,
+        description: description,
+        isbn: isbn,
+        quantity: quantity,
+        category: category
+      }).then(function(book) {
+        console.log('Books saved successfully')
+        res.redirect('/books');
+      }).catch(function(error) {
+        console.log(error.code);
+        res.render('admin/addbooks')
+      });
+    // res.redirect('admin/books');
+  }
+
+});
+
 
 
 module.exports = router;
