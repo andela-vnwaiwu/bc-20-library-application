@@ -1,0 +1,15 @@
+<% include header.ejs %>
+<div class="container">
+  <h1 class="center-align"><%= message %></h1>
+  <% if (error.status === 404) { %>
+    <p class="flow-text center-align"><%= error.status %></p>
+    <p class="flow-text center-align">...Oops, Sorry the page can not be found!</p>
+  <% } else if(error.status === 403 || error.status === 401) { %>
+    <p class="flow-text center-align"><%= error.status %></p>
+    <p class="flow-text center-align">...Oops, you are forbidden to view this page</p>
+  <% } else { %>
+    <p class="flow-text center-align"><%= error.status %></p>
+    <p class="flow-text center-align">...Oops, an error occured while processing your request</p>
+  <% } %>
+</div>
+<% include footer.ejs %>
