@@ -1,0 +1,11 @@
+@media screen and (min-width:968px) {
+  .form-div  {
+    width: 50%;
+    margin: auto;
+  }
+}
+
+.form-div{
+    padding: 20px;
+    top: 20;
+  }
