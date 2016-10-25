@@ -1,0 +1,31 @@
+<% include header.ejs %>
+<div class="container">
+  <div class="form-div z-depth-2">
+    <h3 class="center-align">Login Form</h3>
+    <% if (typeof(message) !== 'undefined' ) { %>
+    <p class="error"><%= message %></p>
+    <% } %>
+    <form class="col s12" action="/auth/login" method="POST">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" type="email" name="email" class="validate">
+          <label for="email">Email</label>
+        </div>
+      </div><! -- email row -->
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="password" type="password" name="password" class="validate">
+          <label for="password">Password</label>
+        </div>
+      </div><! -- password row -->
+      <div class="row">
+        <div class="center">
+          <button class="btn waves-effect waves-light" id="login" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div><! -- form-container -->
+<% include footer.ejs %>
