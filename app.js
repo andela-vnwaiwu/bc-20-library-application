@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var firebase = require('firebase');
 require('firebase/auth');
+require('firebase/database');
 
 var config = {
     apiKey: process.env.apiKey,
@@ -31,6 +32,7 @@ module.exports = {
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
+var auth = require('./routes/auth')(firebase);
 
 var app = express();
 
@@ -48,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/user', users);
+app.use('/auth', auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
