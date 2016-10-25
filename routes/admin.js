@@ -60,6 +60,30 @@ router.post('/addbook', function(req, res) {
 
 });
 
+router.get('/categories', function (req, res) {
+  var ref = db.ref('categories');
+  ref.on('value', function(snapshot) {
+    console.log(snapshot.val());
+    var categories = snapshot.val();
+    res.render('admin/categories', {title: 'Books', categories: categories});
+  }, function (errorObject) {
+    console.log('The read failed: ' + errorObject.code);
+  });
+});
 
+router.post('/addcategory', function (req, res) {
+  var name = req.body.name;
+  var description = req.body.description;
+  db.ref('categories/').push({
+    name: name,
+    description: description,
+  }).then(function(categories) {
+    console.log('Books saved successfully');
+    res.redirect('/admin/categories');
+  }).catch(function(error) {
+    console.log(error.code);
+    res.render('admin/categories');
+  });
+});
 
 module.exports = router;
