@@ -1,0 +1,34 @@
+{
+  "name": "bc-20-library-application",
+  "version": "1.0.0",
+  "description": "A library application that allows a user borrow and return books. Also allows an Admin to create, edit and delete books",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vonvick/bc-20-library-application.git"
+  },
+  "keywords": [
+    "library",
+    "javascript",
+    "firebase"
+  ],
+  "author": "Victor Nwaiwu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vonvick/bc-20-library-application/issues"
+  },
+  "homepage": "https://github.com/vonvick/bc-20-library-application#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "ejs": "^2.5.2",
+    "firebase": "^3.5.1",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0"
+  }
+}
