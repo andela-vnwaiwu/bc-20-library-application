@@ -12,15 +12,15 @@ router.use('/', application.isAuthenticated);
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.render('user/index', {title: 'Users Page'});
+  res.render('user/index', {title: 'Home Page'});
 });
 
 router.get('/books', function(req, res) {
-  var ref = db.ref('users');
-  ref.on('value', function(snapshot) {
+  var ref = db.ref('books');
+  ref.once('value').then(function(snapshot) {
     console.log(snapshot.val());
-    var users = snapshot.val();
-    res.render('user/books', {title: 'Books', users: users});
+    books = snapshot.val();
+    res.render('user/books', {title: 'Books', books: books});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
