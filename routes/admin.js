@@ -117,10 +117,10 @@ router.post('/addcategory', function (req, res) {
     description: description,
   }).then(function(categories) {
     console.log('Books saved successfully');
-    res.redirect('/admin/categories');
+    res.redirect('/admin/allcategories');
   }).catch(function(error) {
     console.log(error.code);
-    res.render('admin/categories');
+    res.render('admin/allcategories');
   });
 });
 
