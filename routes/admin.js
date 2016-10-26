@@ -19,13 +19,25 @@ router.get('/', function(req, res) {
 /* GET admin/users 
   get the list of all users in the application
 */
-router.get('/books', function(req, res) {
+router.get('/users', function(req, res) {
   var ref = db.ref('users');
   // gets a snapshot of all users in the application
-  ref.on('value', function(snapshot) {
+  ref.once('value', function(snapshot) {
     console.log(snapshot.val());
     var users = snapshot.val();
-    res.render('admin/users', {title: 'Books', users: users});
+    res.render('admin/users', {title: 'Users', users: users});
+  }, function (errorObject) {
+    console.log('The read failed: ' + errorObject.code);
+  });
+});
+
+router.get('/books', function(req, res) {
+  var ref = db.ref('books');
+  // gets a snapshot of all users in the application
+  ref.once('value', function(snapshot) {
+    console.log(snapshot.val());
+    var books = snapshot.val();
+    res.render('admin/users', {title: 'Books', books: books});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
