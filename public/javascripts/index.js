@@ -7,5 +7,6 @@ $(document).ready(function() {
     $('#categoryform').addClass('hidden');
     $('#categories').removeClass('hidden');
   });
+  $('select').material_select();
 
 });
