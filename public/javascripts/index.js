@@ -9,4 +9,13 @@ $(document).ready(function() {
   });
   $('select').material_select();
 
+  $('#addbook').on('click', function() {
+    $('#bookform').removeClass('hidden');
+    $('#books').addClass('hidden');
+  });
+  $('#bookback').on('click', function() {
+    $('#bookform').addClass('hidden');
+    $('#books').removeClass('hidden');
+  });
+
 });

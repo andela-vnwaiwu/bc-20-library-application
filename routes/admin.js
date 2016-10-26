@@ -55,17 +55,6 @@ router.get('/books', function(req, res) {
   });
 });
 
-router.get('/addbook', function (req, res) {
-  var ref = db.ref('categories');
-  ref.once('value', function(snapshot) {
-    console.log(snapshot.val());
-    var categories = snapshot.val();
-    res.render('admin/addbook', {title: 'Books', categories: categories});
-  }, function (errorObject) {
-    console.log('The read failed: ' + errorObject.code);
-  });
-});
-
 router.post('/addbook', function(req, res) {
   var title = req.body.title;
   var author = req.body.author;
@@ -91,11 +80,10 @@ router.post('/addbook', function(req, res) {
 
 router.get('/book/:title', function (req, res) {
   var title = req.params.title;
-  db.ref('books')
-   .orderByChild('title')
-   .equalTo(title)
-   .limitToFirst(1)
-   .on('child_added', function(snapshot) {
+  var ref = db.ref('books');
+  var catRef = db.ref('categories');
+  ref.orderByChild('title').equalTo(title).limitToFirst(1).once('child_added')
+    .then(function(snapshot) {
      var book = snapshot.val();
      var bookKey = snapshot.key;
      post = {
@@ -107,30 +95,26 @@ router.get('/book/:title', function (req, res) {
        category: book.category,
        quantity: book.quantity
      };
-     res.render('admin/books', {title: 'Books', books: post });
-    //  res.render('admin/editcategory', req.post);
-    })
-    // .then(function(post) {
-    //   db.ref('categories').once('value', function(snapshot) {
-    //     console.log(snapshot.val());
-    //     var categories = snapshot.val();
-    //     res.render('admin/books', {title: 'Books', categories: categories, post: post });
-    //   }, function (errorObject) {
-    //     console.log('The read failed: ' + errorObject.code);
-    //   });
-    // });
+     return catRef.once('value').then(function(cat) {
+       categories = cat.val();
+     })
+    .then(function() {
+      console.log(post.key);
+      res.render('admin/editbook',  {title: 'Edit Book', post: post, categories:categories});
+    }).catch(function (errorObject) {
+        console.log('The read failed: ' + errorObject.code);
+      });
+    });
 });
 
-
 router.post('/book/:title', function (req, res){
-  var id = req.body.bookid;
+  var id = req.body.bookId;
   var title = req.body.title;
   var author = req.body.author;
   var description = req.body.description;
   var isbn = req.body.isbn;
   var category = req.body.category;
   var quantity = req.body.quantity;
-  console.log(id, name);
   db.ref('books/' + id).set({
     title : title,
     author: author,
@@ -138,12 +122,13 @@ router.post('/book/:title', function (req, res){
     isbn: isbn,
     category: category,
     quantity: quantity
-  }).then(function(categories) {
+  }).then(function() {
+    console.log(id);
     console.log('Books saved successfully');
     res.redirect('/admin/books');
   }).catch(function(error) {
     console.log(error.code);
-    console.log(name);
+
     res.redirect('admin/book/' + title);
   });
 });
