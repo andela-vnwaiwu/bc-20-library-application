@@ -12,7 +12,7 @@ module.exports = function (firebase) {
         console.log('I didnt pass');
         res.redirect('/login');
       } else {
-        console.log(error.code);
+        console.log(err.code);
         res.redirect('/login');
       }
     })

@@ -1,0 +1,11 @@
+<% include ../header.ejs %>
+  <div class="container">
+    <div class="row">
+      <% for (key in users) { %>
+        <p class="flow-text"><%= users[key].email %> </p>
+        <p class="flow-text"><%= users[key].firstname %> </p>
+        <p class="flow-text"><%= users[key].lastname %> </p>
+      <% } %>
+    </div>
+  </div>
+<% include ../footer.ejs %>

@@ -9,3 +9,8 @@
     padding: 20px;
     top: 20;
   }
+
+.hidden {
+  visibility: hidden;
+  display: none;
+}

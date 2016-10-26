@@ -1,0 +1,51 @@
+<% include ../header.ejs %>
+  <div class="container">
+    <h4 class="center-align">The list of categories are displayed here</h4>
+    <div id="categories">
+      <div class="row">
+        <a class="btn waves-effect waves-light brown" id="addcategory"><i class="material-icons left">add</i>Add Category</a>
+      </div>
+      <div class="row">
+        <% if (categories === null) { %>
+          <p class="flow-text center-align"> You have not created any category, click the button above to create one </p>
+        <% } else { %>
+        <% for (key in categories) { %>
+          <div class="col s3">
+            <%= categories[key].name %>
+            <%= categories[key].description %>
+          </div>
+        <% }} %>
+      </div>
+    </div>
+    <div id="categoryform" class="hidden form-div z-depth-2">
+    <h3 class="center-align">Create a Category</h3>
+    <% if (typeof(message) !== 'undefined' ) { %>
+    <p class="error"><%= message %></p>
+    <% } %>
+    <form class="col s12" action="/admin/addcategory" method="POST">
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="name" type="text" name="name" class="validate">
+          <label for="name">Category</label>
+        </div>
+      </div><! -- category name -->
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea class="materialize-textarea" id="description" name="description" class="validate" placeholder="enter a brief description for this category"></textarea>
+          <label for="description">Description</label>
+        </div>
+      </div><! --category description -->
+      <div class="row">
+        <div class="center">
+          <button class="btn waves-effect waves-light" id="login" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+          </button>
+          <a class="btn-flat disabled" id="backcategory">Go Back
+            <i class="material-icons right">return</i>
+          </a>
+        </div><! -- Button Div -->
+      </div>
+    </form>
+  </div>
+  </div>
+<% include ../footer.ejs %>

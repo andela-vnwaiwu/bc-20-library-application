@@ -9,6 +9,7 @@ var firebase = require('firebase');
 require('firebase/auth');
 require('firebase/database');
 
+
 var config = {
     apiKey: process.env.apiKey,
     authDomain: process.env.authDomain,
@@ -27,13 +28,22 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
+  },
+  isAdmin: function (req, res, next) {
+    var user = firebase.auth().currentUser;
+    if (user !== null && user.email === 'victorjohn@yahoo.com') {
+      req.user = user;
+      next();
+    } else {
+      res.redirect('/login');
+    }
   }
 };
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var auth = require('./routes/auth')(firebase);
-
+var admin = require('./routes/admin');
 var app = express();
 
 // view engine setup
@@ -51,6 +61,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/user', users);
 app.use('/auth', auth);
+app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
