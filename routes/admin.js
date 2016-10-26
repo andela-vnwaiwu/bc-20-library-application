@@ -60,14 +60,52 @@ router.post('/addbook', function(req, res) {
 
 });
 
-router.get('/categories', function (req, res) {
+
+router.get('/allcategories', function (req, res) {
   var ref = db.ref('categories');
-  ref.on('value', function(snapshot) {
+  ref.once('value', function(snapshot) {
     console.log(snapshot.val());
     var categories = snapshot.val();
-    res.render('admin/categories', {title: 'Books', categories: categories});
+    res.render('admin/categories', {title: 'Categories', categories: categories});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
+  });
+});
+
+router.get('/category/:name', function (req, res) {
+  var name = req.params.name;
+  db.ref('categories')
+   .orderByChild('name')
+   .equalTo(name)
+   .limitToFirst(1)
+   .on('child_added', function(snapshot) {
+     var category = snapshot.val();
+     var categoryKey = snapshot.key;
+     req.post = {
+       key: categoryKey,
+       name : category.name,
+       description : category.description
+     };
+     res.render('admin/editcategory', req.post);
+    });
+});
+
+
+router.post('/category/:name', function (req, res){
+  var id = req.body.categoryid;
+  var name = req.body.name;
+  var description = req.body.description;
+  console.log(id, name);
+  db.ref('categories/' + id).set({
+    name: name,
+    description: description
+  }).then(function(categories) {
+    console.log('Books saved successfully');
+    res.redirect('/admin/allcategories');
+  }).catch(function(error) {
+    console.log(error.code);
+    console.log(name);
+    res.redirect('admin/category/' + name);
   });
 });
 
@@ -85,5 +123,6 @@ router.post('/addcategory', function (req, res) {
     res.render('admin/categories');
   });
 });
+
 
 module.exports = router;
