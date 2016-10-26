@@ -77,31 +77,63 @@ router.post('/addbook', function(req, res) {
   });
 });
 
+router.get('/book/:title', function (req, res) {
+  var title = req.params.name;
+  db.ref('books')
+   .orderByChild('title')
+   .equalTo(title)
+   .limitToFirst(1)
+   .on('child_added', function(snapshot) {
+     var book = snapshot.val();
+     var bookKey = snapshot.key;
+     post = {
+       key: bookKey,
+       title : book.title,
+       author: book.author,
+       description : book.description,
+       isbn: book.isbn,
+       category: book.category,
+       quantity: book.quantity
+     };
+    //  res.render('admin/editcategory', req.post);
+    })
+    .then(function(post) {
+      db.ref('categories').once('value', function(snapshot) {
+        console.log(snapshot.val());
+        var categories = snapshot.val();
+        res.render('admin/users', {title: 'Books', categories: categories, post: post });
+      }, function (errorObject) {
+        console.log('The read failed: ' + errorObject.code);
+      });
+    });
+});
 
-// router.post('/addbook', function(req, res) {
-//   var title = req.body.title;
-//   var author = req.body.author;
-//   var description = req.body.description;
-//   var isbn = req.body.isbn;
-//   var quantity = req.body.quantity;
-//   var category = req.body.category;
-//   db.ref('books/').push({
-//     title: title,
-//     author: author,
-//     description: description,
-//     isbn: isbn,
-//     quantity: quantity,
-//     category: category
-//   }).then(function(book) {
-//     console.log('Books saved successfully')
-//     res.redirect('/books');
-//   }).catch(function(error) {
-//     console.log(error.code);
-//     res.render('admin/addbooks')
-//   });
-//   // res.redirect('admin/books');
 
-// });
+router.post('/book/:title', function (req, res){
+  var id = req.body.bookid;
+  var title = req.body.title;
+  var author = req.body.author;
+  var description = req.body.description;
+  var isbn = req.body.isbn;
+  var category = req.body.category;
+  var quantity = req.body.quantity;
+  console.log(id, name);
+  db.ref('books/' + id).set({
+    title : title,
+    author: author,
+    description : description,
+    isbn: isbn,
+    category: category,
+    quantity: quantity
+  }).then(function(categories) {
+    console.log('Books saved successfully');
+    res.redirect('/admin/books');
+  }).catch(function(error) {
+    console.log(error.code);
+    console.log(name);
+    res.redirect('admin/book/' + title);
+  });
+});
 
 
 router.get('/allcategories', function (req, res) {
