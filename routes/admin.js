@@ -37,7 +37,7 @@ router.get('/books', function(req, res) {
   ref.once('value', function(snapshot) {
     console.log(snapshot.val());
     var books = snapshot.val();
-    res.render('admin/users', {title: 'Books', books: books});
+    res.render('admin/books', {title: 'Books', books: books});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
