@@ -7,6 +7,11 @@ require('firebase/database');
 
 var db = firebase.database();
 
+function getTableResults (table) {
+  return db.ref(table).once('value').then(function(snapshot) {
+    return snapshot.val();
+  });
+}
 
 router.use('/', application.isAdmin);
 
@@ -33,13 +38,20 @@ router.get('/users', function(req, res) {
 
 router.get('/books', function(req, res) {
   var ref = db.ref('books');
-  // gets a snapshot of all users in the application
-  ref.once('value', function(snapshot) {
-    console.log(snapshot.val());
-    var books = snapshot.val();
-    res.render('admin/books', {title: 'Books', books: books});
-  }, function (errorObject) {
+  var catRef = db.ref('categories');
+  ref.once('value').then(function(snapshot) {
+    books = snapshot.val();
+    return catRef.once('value').then(function(cat) {
+      category = cat.val();
+    }).then(function() {
+      console.log(books);
+      console.log(category);
+      res.render('admin/books', {title: 'Books', books: books, categories:category});
+    })
+    .catch(function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
+    return errorObject;
+  });
   });
 });
 
@@ -78,7 +90,7 @@ router.post('/addbook', function(req, res) {
 });
 
 router.get('/book/:title', function (req, res) {
-  var title = req.params.name;
+  var title = req.params.title;
   db.ref('books')
    .orderByChild('title')
    .equalTo(title)
@@ -95,17 +107,18 @@ router.get('/book/:title', function (req, res) {
        category: book.category,
        quantity: book.quantity
      };
+     res.render('admin/books', {title: 'Books', books: post });
     //  res.render('admin/editcategory', req.post);
     })
-    .then(function(post) {
-      db.ref('categories').once('value', function(snapshot) {
-        console.log(snapshot.val());
-        var categories = snapshot.val();
-        res.render('admin/users', {title: 'Books', categories: categories, post: post });
-      }, function (errorObject) {
-        console.log('The read failed: ' + errorObject.code);
-      });
-    });
+    // .then(function(post) {
+    //   db.ref('categories').once('value', function(snapshot) {
+    //     console.log(snapshot.val());
+    //     var categories = snapshot.val();
+    //     res.render('admin/books', {title: 'Books', categories: categories, post: post });
+    //   }, function (errorObject) {
+    //     console.log('The read failed: ' + errorObject.code);
+    //   });
+    // });
 });
 
 
