@@ -10,10 +10,17 @@
           <p class="flow-text center-align"> You have not created any category, click the button above to create one </p>
         <% } else { %>
         <% for (key in categories) { %>
-          <div class="col s3">
-            <%= categories[key].name %>
-            <%= categories[key].description %>
+          <div class="col s12 m3">
+          <div class="card small blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title"><%= categories[key].name.substring(0, 15) %> ...</span>
+              <p><%= categories[key].description.substring(0, 40) %> ...</p>
+            </div>
+            <div class="card-action">
+              <a href="/admin/category/<%= categories[key].name %>">Edit this category</a>
+            </div>
           </div>
+        </div>
         <% }} %>
       </div>
     </div>
