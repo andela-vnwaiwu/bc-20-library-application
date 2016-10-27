@@ -1,11 +1,57 @@
 <% include ../header.ejs %>
   <div class="container">
-    <div class="row">
-      <% for (key in users) { %>
-        <p class="flow-text"><%= users[key].email %> </p>
-        <p class="flow-text"><%= users[key].firstname %> </p>
-        <p class="flow-text"><%= users[key].lastname %> </p>
-      <% } %>
+    <h4 class="center-align">These are the list of books in the library</h4>
+    <div id="books">
+      <div class="row">
+        <% if (books === null) { %>
+            <p class="flow-text center-align"> There are no book in the library at the moment...please check back later as we are bring you quality books. </p>
+          <% } else { %>
+          <% for (key in books) { %>
+            <div class="col s12 m3">
+              <div class="card lime lighten-1">
+                <div class="card-image waves-effect waves-block waves-light">
+                  <img class="activator" src="/images/office.png" width="50" height="100">
+                </div>
+                <div class="card-content">
+                  <span class="card-title activator grey-text text-darken-4"><%= books[key].title %><i class="material-icons right">more_vert</i></span>
+                  <p>Author : <%= books[key].author %> </p>
+                  <p>ISBN : <%= books[key].isbn %> </p>
+                  <% if (books[key].status === 'borrowed') { %>
+                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>a">Return Book</a>
+                  <% } else { %>
+                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Borrow Book</a>
+                  <% } %>
+                </div>
+                <div class="card-reveal">
+                  <span class="card-title grey-text text-darken-4"><%= books[key].title %><i class="material-icons right">close</i></span>
+                  <p>Quantity : <%= books[key].quantity %></p>
+                  <p>Description : </p>
+                  <p> <%= books[key].description %></p>
+                </div>
+              </div>
+            </div><! -- col div -->
+            <div id="<%= books[key].isbn %>" class="modal">
+              <div class="modal-content">
+                <h4>Borrow This book</h4>
+                <p>You are about to borrow this book</p>
+                <p>You will be charged $1.50 per day if the book is not returned within 7 days</p>
+              </div><! -- modal content -->
+              <div class="modal-footer">
+                <a href="/user/borrow/<%= books[key].title %>" class=" modal-action modal-close waves-effect waves-green btn-flat">Yes, Borrow</a>
+              </div><! -- modal footer -->
+            </div><!-- modal -->
+            <div id="<%= books[key].isbn %>a" class="modal">
+              <div class="modal-content">
+                <h4>Return This book</h4>
+                <p>You are about to return this book</p>
+                <p>Once you return the book, You will need to borrow the book to read it again</p>
+              </div><! -- replace modal content -->
+              <div class="modal-footer">
+                <a href="/user/return/<%= books[key].title %>" class=" modal-action modal-close waves-effect waves-green btn-flat">Yes, Return</a>
+              </div><! -- replace modal footer -->
+            </div><!-- replace modal -->
+          <% }} %>
+      </div>
     </div>
   </div>
 <% include ../footer.ejs %>

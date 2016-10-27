@@ -17,5 +17,5 @@ $(document).ready(function() {
     $('#bookform').addClass('hidden');
     $('#books').removeClass('hidden');
   });
-
+  $('.modal-trigger').leanModal();
 });
