@@ -3,7 +3,7 @@ var router = express.Router();
 var application = require('../app');
 var firebase = require('firebase');
 require('firebase/database');
-
+var querybase = require('querybase');
 var db = firebase.database();
 
 
@@ -28,9 +28,7 @@ router.get('/books', function(req, res) {
       borrowedKey = snapshot.key;
       for (var key in borrowed) {
         var bookId = borrowed[key].bookid;
-        console.log(borrowed[key].bookid);
-        // console.log(books);
-        if(books.hasOwnProperty(bookId) ) {
+        if(books.hasOwnProperty(bookId) && borrowed[key].status === 'borrowed') {
           books[bookId].status = 'borrowed'; 
         }
       }
@@ -87,31 +85,42 @@ router.get('/return/:title', function(req, res) {
   var ref = db.ref('books');
   var borrow = db.ref('borrowed');
   ref.orderByChild('title').equalTo(title).limitToFirst(1).once('child_added')
-    .then(function(snapshot) {
-      console.log('I have started');
-      var bookKey = snapshot.key;
-      var book = snapshot.val();
+  .then(function(snapshot) {
+    console.log('I have started');
+    var bookKey = snapshot.key;
+    var book = snapshot.val();
+    console.log(bookKey);
+    borrow.orderByChild('userid').equalTo(user).once('value')
+    .then(function (snapshot) {
+      var borrowed = snapshot.val();
+      return borrowed;
+    })
+    .then(function (borrowed) {
+      console.log(borrowed);
       console.log(bookKey);
-    //   borrow.push({
-    //     userid: user,
-    //     bookid: bookKey,
-    //     status: 'returned',
-    //     dateBorrowed: new Date().getTime(),
-    //     dateReturned: null,
-    //     dateDue: new Date().getTime() + 604800000
-    //   });
-    //   return db.ref('books/' + bookKey).update({
-    //     quantity: book.quantity -1
-    //   });
-    // })
-    // .then(function () {
-    //   console.log('I finally made It');
-    //   // res.redirect('/user/books');
+      for (var key in borrowed) {
+        if (borrowed[key].bookid === bookKey && borrowed[key].status === 'borrowed') {
+          console.log(borrowed[key]);
+          db.ref('borrowed/' +key).update({
+            status: 'returned',
+            dateReturned: new Date().getTime()
+          });
+        }
+      }
+    }).then(function() {
+      db.ref('books/' + bookKey).update({
+        quantity : book.quantity + 1
+      });
+    })
+    .then(function (borrowed) {
+      console.log('I finally made It');
+      res.redirect('/user/books');
     })
     .catch(function(error) {
       console.log(error.code);
       res.render('user/books', {title: 'Books'});
     });
+  });
 });
 
 
