@@ -5,19 +5,19 @@ require('firebase/auth');
 
 isAuthenticated = function (req, res, next) {
   var user = firebase.auth().currentUser;
-    if (user === null) {
-      req.user = null;
-      next();
-      // res.redirect('/');
-    } else {
-      req.user = user;
-      next();
-    }
+  req.user = user;
+    // if (user === null) {
+    //   req.user = null;
+    //   next();
+    // } else {
+    //   req.user = user;
+    //   next();
+    // }
   };
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  if (req.user === null) {
+  if (req.user === null || req.user === undefined) {
     console.log(req.user);
     res.render('index', {title: 'Home', user: null});  
   } else {
@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
 // router.use('/', isAuthenticated);
 
 router.get('/login', function (req, res) {
-  if (req.user === null || req.user === undefined) {
+  if (req.user === null) {
     console.log(req.user);
     res.render('login', {title: 'Login', user: null});
   } else {
