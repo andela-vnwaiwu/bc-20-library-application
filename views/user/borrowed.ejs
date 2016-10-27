@@ -1,0 +1,42 @@
+<% include ../header.ejs %>
+  <div class="container">
+  <% if (borrowed === null) { %>
+    <h4 class="center-align"> You have not borrowed any book yet...</h4>
+  <% } else { %>
+    <h4 class="center-align"> Here are the list of books you have borrowed so far...</h4>
+    <table>
+      <thead>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Date Borrowed</th>
+        <th>Date Returned</th>
+        <th>Due Date</th>
+        <th>Surcharge</th>
+      </thead>
+      <tbody>
+      <% for (key in borrowed) { %>
+        <tr>
+          <td><%= borrowed[key].title %></td>
+          <td><%= borrowed[key].author %></td>
+          <td><%= borrowDate = new Date(borrowed[key].dateBorrowed).toLocaleDateString() %></td>
+          <% if (borrowed[key].dateReturned === undefined) { %>
+            <td>Not returned</td>
+          <% } else { %>
+            <td><%= returnDate = new Date(borrowed[key].dateReturned).toLocaleDateString() %></td>
+          <% } %>
+          <td><%= dueDate = new Date(borrowed[key].dateDue).toLocaleDateString() %></td>
+          <% if (borrowed[key].dateReturned && borrowed[key].dateDue < borrowed[key].dateReturned) { %>
+            <%  surcharge = Math.round(((borrowed[key].dateReturned - borrowed[key].dateDue) / 60000) * 1.5) %>
+            <td> $<%= fee = surcharge %></td>
+          <% } else if (borrowed[key].dateReturned === undefined && borrowed[key].dateDue < new Date().getTime()){ %>
+            <%  surcharge = Math.round(((new Date().getTime() - borrowed[key].dateDue) / 60000) * 1.5) %>
+            <td> $<%= fee = surcharge %></td>
+          <% } else { %>
+            <td>No surcharge </td>
+          <% } %>
+        </tr>
+  <% }} %>
+      </tbody>
+      </table>
+  </div>
+<% include ../footer.ejs %>

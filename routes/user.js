@@ -3,7 +3,7 @@ var router = express.Router();
 var application = require('../app');
 var firebase = require('firebase');
 require('firebase/database');
-var querybase = require('querybase');
+
 var db = firebase.database();
 
 
@@ -12,7 +12,18 @@ router.use('/', application.isAuthenticated);
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.render('user/index', {title: 'Home Page'});
+  var ref = db.ref('categories');
+  ref.once('value').then(function(snapshot) {
+    var categories = snapshot.val();
+    return categories;
+  }).then(function(categories){
+      console.log(req.user);
+    res.render('user/index', {title: 'Home', user: req.user, categories: categories});
+  })
+  .catch(function (errorObject) {
+    console.log('The read failed: ' + errorObject.code);
+    res.render('error');
+  });
 });
 
 router.get('/books', function(req, res) {
@@ -35,7 +46,7 @@ router.get('/books', function(req, res) {
       return books;
     }).then(function(books) {
       console.log(books);
-      res.render('user/books', {title: 'Books', books: books});
+      res.render('user/books', {title: 'Books', books: books, user: req.user});
     });
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
@@ -59,7 +70,7 @@ router.get('/borrow/:title', function(req, res) {
           status: 'borrowed',
           dateBorrowed: new Date().getTime(),
           dateReturned: null,
-          dateDue: new Date().getTime() + 604800000
+          dateDue: new Date().getTime() + 60000
         });
         return db.ref('books/' + bookKey).update({
           quantity: book.quantity -1
@@ -75,7 +86,7 @@ router.get('/borrow/:title', function(req, res) {
     })
     .catch(function(error) {
       console.log(error.code);
-      res.render('user/books', {title: 'Books'});
+      res.render('user/books', {title: 'Books', user: req.user});
     });
 });
 
@@ -118,10 +129,35 @@ router.get('/return/:title', function(req, res) {
     })
     .catch(function(error) {
       console.log(error.code);
-      res.render('user/books', {title: 'Books'});
+      res.render('user/books', {title: 'Books', user: req.user});
     });
   });
 });
 
-
+router.get('/borrowedlist', function(req, res) {
+  var userid = req.user.uid;
+  var ref = db.ref('books');
+  var userBorrowed = db.ref('borrowed');
+  ref.once('value').then(function(snapshot) {
+    books = snapshot.val();
+    bookKey = snapshot.key;
+    return userBorrowed.orderByChild('userid').equalTo(userid).once('value')
+    .then(function (snapshot) {
+      borrowed = snapshot.val();
+      borrowedKey = snapshot.key;
+      for (var key in borrowed) {
+        var bookId = borrowed[key].bookid;
+        if(books.hasOwnProperty(bookId)) {
+          borrowed[key].title = books[bookId].title;
+          borrowed[key].author = books[bookId].author;
+          borrowed[key].isbn = books[bookId].isbn;
+        }
+      }
+      return borrowed;
+    }).then(function(borrowed) {
+      console.log(borrowed);
+      res.render('user/borrowed', {title: 'Books', borrowed: borrowed, user: req.user});
+    });
+  });
+});
 module.exports = router;
