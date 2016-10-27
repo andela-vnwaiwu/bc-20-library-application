@@ -59,7 +59,7 @@ router.get('/borrow/:title', function(req, res) {
           status: 'borrowed',
           dateBorrowed: new Date().getTime(),
           dateReturned: null,
-          dateDue: new Date().getTime() + 604800000
+          dateDue: new Date().getTime() + 60000
         });
         return db.ref('books/' + bookKey).update({
           quantity: book.quantity -1
