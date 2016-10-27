@@ -18,7 +18,7 @@ router.use('/', application.isAdmin);
 
 /* GET admin/ */
 router.get('/', function(req, res) {
-  res.render('admin/index', {title: 'Users Page'});
+  res.render('admin/index', {title: 'Users Page', user: req.user});
 });
 
 /* GET admin/users 
@@ -30,7 +30,7 @@ router.get('/users', function(req, res) {
   ref.once('value', function(snapshot) {
     console.log(snapshot.val());
     var users = snapshot.val();
-    res.render('admin/users', {title: 'Users', users: users});
+    res.render('admin/users', {title: 'Users', users: users, user: req.user});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
@@ -46,7 +46,7 @@ router.get('/books', function(req, res) {
     }).then(function() {
       console.log(books);
       console.log(category);
-      res.render('admin/books', {title: 'Books', books: books, categories:category});
+      res.render('admin/books', {title: 'Books', books: books, categories:category, user: req.user});
     })
     .catch(function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
@@ -71,11 +71,11 @@ router.post('/addbook', function(req, res) {
     category: category,
     status: 'available'
   }).then(function(book) {
-    console.log('Books saved successfully')
+    console.log('Books saved successfully');
     res.redirect('/admin/books');
   }).catch(function(error) {
     console.log(error.code);
-    res.render('admin/addbook');
+    res.render('admin/addbook', { user: req.user});
   });
 });
 
@@ -101,7 +101,7 @@ router.get('/book/:title', function (req, res) {
      })
     .then(function() {
       console.log(post.key);
-      res.render('admin/editbook',  {title: 'Edit Book', post: post, categories:categories});
+      res.render('admin/editbook',  {title: 'Edit Book', post: post, categories:categories, user: req.user});
     }).catch(function (errorObject) {
         console.log('The read failed: ' + errorObject.code);
       });
@@ -130,7 +130,7 @@ router.post('/book/:title', function (req, res){
   }).catch(function(error) {
     console.log(error.code);
 
-    res.redirect('admin/book/' + title);
+    res.redirect('admin/book/' + title, {user: req.user});
   });
 });
 
@@ -140,7 +140,7 @@ router.get('/allcategories', function (req, res) {
   ref.once('value', function(snapshot) {
     console.log(snapshot.val());
     var categories = snapshot.val();
-    res.render('admin/categories', {title: 'Categories', categories: categories});
+    res.render('admin/categories', {title: 'Categories', categories: categories, user: req.user});
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
@@ -155,12 +155,12 @@ router.get('/category/:name', function (req, res) {
    .on('child_added', function(snapshot) {
      var category = snapshot.val();
      var categoryKey = snapshot.key;
-     req.post = {
+     post = {
        key: categoryKey,
        name : category.name,
        description : category.description
      };
-     res.render('admin/editcategory', req.post);
+     res.render('admin/editcategory', {post: post, user: req.user});
     });
 });
 
@@ -194,7 +194,7 @@ router.post('/addcategory', function (req, res) {
     res.redirect('/admin/allcategories');
   }).catch(function(error) {
     console.log(error.code);
-    res.render('admin/allcategories');
+    res.render('admin/allcategories', {user: req.user});
   });
 });
 

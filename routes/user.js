@@ -12,7 +12,7 @@ router.use('/', application.isAuthenticated);
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.render('user/index', {title: 'Home Page'});
+  res.render('user/index', {title: 'Home Page', user: req.user});
 });
 
 router.get('/books', function(req, res) {
@@ -35,7 +35,7 @@ router.get('/books', function(req, res) {
       return books;
     }).then(function(books) {
       console.log(books);
-      res.render('user/books', {title: 'Books', books: books});
+      res.render('user/books', {title: 'Books', books: books, user: req.user});
     });
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
@@ -75,7 +75,7 @@ router.get('/borrow/:title', function(req, res) {
     })
     .catch(function(error) {
       console.log(error.code);
-      res.render('user/books', {title: 'Books'});
+      res.render('user/books', {title: 'Books', user: req.user});
     });
 });
 
@@ -118,7 +118,7 @@ router.get('/return/:title', function(req, res) {
     })
     .catch(function(error) {
       console.log(error.code);
-      res.render('user/books', {title: 'Books'});
+      res.render('user/books', {title: 'Books', user: req.user});
     });
   });
 });
@@ -145,7 +145,7 @@ router.get('/borrowedlist', function(req, res) {
       return borrowed;
     }).then(function(borrowed) {
       console.log(borrowed);
-      res.render('user/borrowed', {title: 'Books', borrowed: borrowed});
+      res.render('user/borrowed', {title: 'Books', borrowed: borrowed, user: req.user});
     });
   });
 });
