@@ -12,8 +12,18 @@ router.use('/', application.isAuthenticated);
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  console.log(req.user);
-  res.render('user/index', {title: 'Home Page', user: req.user});
+  var ref = db.ref('categories');
+  ref.once('value').then(function(snapshot) {
+    var categories = snapshot.val();
+    return categories;
+  }).then(function(categories){
+      console.log(req.user);
+    res.render('user/index', {title: 'Home', user: req.user, categories: categories});
+  })
+  .catch(function (errorObject) {
+    console.log('The read failed: ' + errorObject.code);
+    res.render('error');
+  });
 });
 
 router.get('/books', function(req, res) {
