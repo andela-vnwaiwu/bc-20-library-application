@@ -17,7 +17,7 @@
                   <p>Author : <%= books[key].author %> </p>
                   <p>ISBN : <%= books[key].isbn %> </p>
                   <% if (books[key].status === 'borrowed') { %>
-                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Return Book</a>
+                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>a">Return Book</a>
                   <% } else { %>
                     <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Borrow Book</a>
                   <% } %>
@@ -37,9 +37,19 @@
                 <p>You will be charged $1.50 per day if the book is not returned within 7 days</p>
               </div><! -- modal content -->
               <div class="modal-footer">
-                <a href="/user/borrow/<%= books[key].title %>" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                <a href="/user/borrow/<%= books[key].title %>" class=" modal-action modal-close waves-effect waves-green btn-flat">Yes, Borrow</a>
               </div><! -- modal footer -->
             </div><!-- modal -->
+            <div id="<%= books[key].isbn %>a" class="modal">
+              <div class="modal-content">
+                <h4>Return This book</h4>
+                <p>You are about to return this book</p>
+                <p>Once you return the book, You will need to borrow the book to read it again</p>
+              </div><! -- replace modal content -->
+              <div class="modal-footer">
+                <a href="/user/return/<%= books[key].title %>" class=" modal-action modal-close waves-effect waves-green btn-flat">Yes, Return</a>
+              </div><! -- replace modal footer -->
+            </div><!-- replace modal -->
           <% }} %>
       </div>
     </div>
