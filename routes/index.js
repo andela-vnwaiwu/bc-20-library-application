@@ -1,19 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var application = require('../app');
 var firebase = require('firebase');
 require('firebase/auth');
 
-isAuthenticated = function (req, res, next) {
-  var user = firebase.auth().currentUser;
-  req.user = user;
-    // if (user === null) {
-    //   req.user = null;
-    //   next();
-    // } else {
-    //   req.user = user;
-    //   next();
-    // }
-  };
+
+router.use('/', application.isLoggedIn);
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -26,10 +18,8 @@ router.get('/', function (req, res) {
   }
 });
 
-// router.use('/', isAuthenticated);
-
 router.get('/login', function (req, res) {
-  if (req.user === null) {
+  if (req.user === null || req.user === undefined) {
     console.log(req.user);
     res.render('login', {title: 'Login', user: null});
   } else {
@@ -47,7 +37,5 @@ router.get('/signup', function (req, res) {
     res.redirect('/');
   }
 });
-
-
 
 module.exports = router;

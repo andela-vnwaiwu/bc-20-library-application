@@ -12,6 +12,7 @@ router.use('/', application.isAuthenticated);
 
 /* GET users listing. */
 router.get('/', function(req, res) {
+  console.log(req.user);
   res.render('user/index', {title: 'Home Page', user: req.user});
 });
 
