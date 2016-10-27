@@ -68,7 +68,8 @@ router.post('/addbook', function(req, res) {
     description: description,
     isbn: isbn,
     quantity: quantity,
-    category: category
+    category: category,
+    status: 'available'
   }).then(function(book) {
     console.log('Books saved successfully')
     res.redirect('/admin/books');
