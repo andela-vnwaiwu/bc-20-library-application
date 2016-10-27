@@ -16,7 +16,11 @@
                   <span class="card-title activator grey-text text-darken-4"><%= books[key].title %><i class="material-icons right">more_vert</i></span>
                   <p>Author : <%= books[key].author %> </p>
                   <p>ISBN : <%= books[key].isbn %> </p>
-                  <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Borrow Book</a>
+                  <% if (books[key].status === 'borrowed') { %>
+                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Return Book</a>
+                  <% } else { %>
+                    <a class="waves-effect waves-light btn brown modal-trigger" href="#<%= books[key].isbn %>">Borrow Book</a>
+                  <% } %>
                 </div>
                 <div class="card-reveal">
                   <span class="card-title grey-text text-darken-4"><%= books[key].title %><i class="material-icons right">close</i></span>
