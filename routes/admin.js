@@ -16,7 +16,7 @@ function getTableResults (table) {
 router.use('/', application.isAdmin);
 
 
-/* GET admin/ */
+/* GET admin */
 router.get('/', function(req, res) {
   res.render('admin/index', {title: 'Users Page', user: req.user});
 });
@@ -134,6 +134,30 @@ router.post('/book/:title', function (req, res){
   });
 });
 
+router.get('/deletebook/:title', function (req, res) {
+  var title = req.params.title;
+  console.log(title);
+  db.ref('books')
+   .orderByChild('title')
+   .equalTo(title)
+   .limitToFirst(1)
+   .once('child_added')
+   .then(function(snapshot) {
+     console.log(snapshot.val());
+     var category = snapshot.val();
+     var categoryKey = snapshot.key;
+     return categoryKey;
+   })
+    .then(function(categoryKey) {
+      console.log(categoryKey);
+      db.ref('books').child(categoryKey).remove();
+      console.log('Book deleted successfully');
+      res.redirect('/admin/books');
+    }).catch(function(error) {
+      console.log(error.code);
+      res.redirect('/admin/books/' + name);
+  });
+});
 
 router.get('/allcategories', function (req, res) {
   var ref = db.ref('categories');
@@ -198,5 +222,28 @@ router.post('/addcategory', function (req, res) {
   });
 });
 
+router.get('/deletecategory/:name', function (req, res) {
+  var name = req.params.name;
+  console.log(name);
+  db.ref('categories')
+   .orderByChild('name')
+   .equalTo(name)
+   .limitToFirst(1)
+   .once('child_added')
+   .then(function(snapshot) {
+     var category = snapshot.val();
+     var categoryKey = snapshot.key;
+     return categoryKey;
+   })
+    .then(function(categoryKey) {
+      console.log(categoryKey)
+      db.ref('categories').child(categoryKey).remove();
+      console.log('Categories deleted successfully');
+      res.redirect('/admin/allcategories');
+    }).catch(function(error) {
+      console.log(error.code);
+      res.redirect('/admin/allcategories/' + name);
+  });
+});
 
 module.exports = router;

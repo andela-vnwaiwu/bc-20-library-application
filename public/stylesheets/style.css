@@ -21,7 +21,6 @@
         padding-left: 0;
     }
 }
-
 body {
     display: flex;
     min-height: 100vh;
@@ -102,7 +101,7 @@ input {
 }
 
 #slide-out {
-    background-color: darkslategray;
+    background-color: #412234;
     overflow-y: hidden;
 }
 
