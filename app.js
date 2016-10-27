@@ -37,6 +37,12 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
+  },
+
+  isLoggedIn : function (req, res, next) {
+    var user = firebase.auth().currentUser;
+    req.user = user;
+    next();
   }
 };
 
