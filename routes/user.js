@@ -3,7 +3,7 @@ var router = express.Router();
 var application = require('../app');
 var firebase = require('firebase');
 require('firebase/database');
-var querybase = require('querybase');
+
 var db = firebase.database();
 
 
@@ -123,5 +123,30 @@ router.get('/return/:title', function(req, res) {
   });
 });
 
-
+router.get('/borrowedlist', function(req, res) {
+  var userid = req.user.uid;
+  var ref = db.ref('books');
+  var userBorrowed = db.ref('borrowed');
+  ref.once('value').then(function(snapshot) {
+    books = snapshot.val();
+    bookKey = snapshot.key;
+    return userBorrowed.orderByChild('userid').equalTo(userid).once('value')
+    .then(function (snapshot) {
+      borrowed = snapshot.val();
+      borrowedKey = snapshot.key;
+      for (var key in borrowed) {
+        var bookId = borrowed[key].bookid;
+        if(books.hasOwnProperty(bookId)) {
+          borrowed[key].title = books[bookId].title;
+          borrowed[key].author = books[bookId].author;
+          borrowed[key].isbn = books[bookId].isbn;
+        }
+      }
+      return borrowed;
+    }).then(function(borrowed) {
+      console.log(borrowed);
+      res.render('user/borrowed', {title: 'Books', borrowed: borrowed});
+    });
+  });
+});
 module.exports = router;
