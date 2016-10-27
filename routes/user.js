@@ -16,11 +16,31 @@ router.get('/', function(req, res) {
 });
 
 router.get('/books', function(req, res) {
+  var userid = req.user.uid;
   var ref = db.ref('books');
+  var borrowList = db.ref('borrowed');
   ref.once('value').then(function(snapshot) {
-    console.log(snapshot.val());
     books = snapshot.val();
-    res.render('user/books', {title: 'Books', books: books});
+    bookKey = snapshot.key;
+    return borrowList.orderByChild('userid').equalTo(userid).once('value')
+    .then(function (snapshot) {
+      borrowed = snapshot.val();
+      borrowedKey = snapshot.key;
+      // console.log(borrowed);
+      // console.log(books);
+      for (var key in borrowed) {
+        var bookId = borrowed[key].bookid;
+        console.log(borrowed[key].bookid);
+        // console.log(books);
+        if(books.hasOwnProperty(bookId) ) {
+          books[bookId].status = 'borrowed'; 
+        }
+      }
+      return books;
+    }).then(function(books) {
+      console.log(books);
+      res.render('user/books', {title: 'Books', books: books});
+    });
   }, function (errorObject) {
     console.log('The read failed: ' + errorObject.code);
   });
