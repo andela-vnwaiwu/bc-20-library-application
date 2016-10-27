@@ -1,5 +1,25 @@
 <% include ../header.ejs %>
   <div class="container">
-    <h1> Welcome to the User Page of E-book's Hub application</h1>
+    <h1 class="center-align"> Welcome to your Hub</h1>
+    <div id="categories">
+      <div class="row">
+        <% if (categories === null) { %>
+          <p class="flow-text center-align">We are working on bringing you the best books</p>
+        <% } else { %>
+        <% for (key in categories) { %>
+          <div class="col s12 m3">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title"><%= categories[key].name.substring(0, 15) %> ...</span>
+              <p><%= categories[key].description.substring(0, 40) %> ...</p>
+            </div>
+            <div class="card-action">
+              <a href="/admin/category/<%= categories[key].name %>">View books in this category</a>
+            </div>
+          </div>
+        </div>
+        <% }} %>
+      </div>
+    </div>
   </div>
 <% include ../footer.ejs %>

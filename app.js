@@ -37,6 +37,12 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
+  },
+
+  isLoggedIn : function (req, res, next) {
+    var user = firebase.auth().currentUser;
+    req.user = user;
+    next();
   }
 };
 
@@ -78,6 +84,7 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      user: req.user,
       message: err.message,
       error: err
     });

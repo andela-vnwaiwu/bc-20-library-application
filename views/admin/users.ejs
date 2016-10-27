@@ -1,0 +1,24 @@
+<% include header.ejs %>
+  <div class="container">
+  <% if (users === null) { %>
+    <h4 class="center-align"> There are no user yet...</h4>
+  <% } else { %>
+    <h4 class="center-align"> Here are the list of registered users in the library...</h4>
+    <table class="centered responsive striped bordered highlight">
+      <thead>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </thead>
+      <tbody>
+      <% for (key in users) { %>
+        <tr>
+          <td><%= users[key].firstname %></td>
+          <td><%= users[key].lastname %></td>
+          <td><%= users[key].email %></td>
+        </tr>
+  <% }} %>
+      </tbody>
+      </table>
+  </div>
+<% include footer.ejs %>
