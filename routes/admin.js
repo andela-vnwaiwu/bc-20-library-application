@@ -272,15 +272,18 @@ router.get('/category/:name', function (req, res) {
    .orderByChild('name')
    .equalTo(name)
    .limitToFirst(1)
-   .on('child_added', function(snapshot) {
+   .once('child_added').then(function(snapshot) {
      var category = snapshot.val();
      var categoryKey = snapshot.key;
-     post = {
+     catRef = {
        key: categoryKey,
        name : category.name,
        description : category.description
      };
-     res.render('admin/editcategory', {post: post, user: req.user});
+     return catRef;
+    }).then(function(catRef) {
+      console.log(catRef);
+      res.render('admin/editcategory', {catRef: catRef, user: req.user});
     });
 });
 
