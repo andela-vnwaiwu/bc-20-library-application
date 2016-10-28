@@ -6,14 +6,16 @@ require('firebase/auth');
 
 var db = firebase.database();
 
-
+// make use of the firebase middleware to check if the user is logged in
 router.use('/', application.isLoggedIn);
 
-/* GET home page. */
+/* GET / gets the home page. */
 router.get('/', function (req, res) {
+  // check if the user is logged in
   if (req.user === null) {
     console.log(req.user)
     var ref = db.ref('categories');
+    // query the database for the list of categories
     ref.once('value').then(function(snapshot) {
       var categories = snapshot.val();
       console.log(categories);
@@ -44,7 +46,8 @@ router.get('/', function (req, res) {
 });
 
 
-/* GET /login */
+/* GET /login displays the login form, 
+* redirects to another page if the user is already logged in*/
 router.get('/login', function (req, res) {
   if (req.user === null || req.user === undefined) {
     console.log(req.user);
@@ -56,7 +59,8 @@ router.get('/login', function (req, res) {
 });
 
 
-/* GET /signup */
+/* GET /signup displays the signup form, 
+* redirects if the user is already logged in*/
 router.get('/signup', function (req, res) {
   if (req.user === null || req.user === undefined) {
     res.render('register', {title: 'Register', user: req.user});

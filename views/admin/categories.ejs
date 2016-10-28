@@ -1,6 +1,6 @@
 <% include header.ejs %>
   <div class="container">
-    <h4 class="center-align">The list of categories are displayed here</h4>
+    <h4 class="center-align">CATEGORIES LIST</h4>
     <div id="categories">
       <div class="row">
         <a class="btn waves-effect waves-light brown" id="addcategory"><i class="material-icons left">add</i>Add Category</a>
@@ -18,6 +18,7 @@
             </div>
             <div class="card-action">
               <a href="/admin/category/<%= categories[key].name %>">Edit this category</a>
+              <a href="/admin/deletecategory/<%= categories[key].name %>">Delete this category</a>
             </div>
           </div>
         </div>

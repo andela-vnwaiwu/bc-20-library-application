@@ -1,25 +1,26 @@
 <% include header.ejs %>
   <div class="container">
-    <h4 class="center-align">These are the list of books in the library</h4>
-    <div class="row">
-        <a class="btn waves-effect waves-light brown" id="addbook"><i class="material-icons left">add</i>Add a Book</a>
-    </div>
     <div id="books">
+      <h4 class="center-align">BOOKS LIST</h4>
+      <div class="row">
+        <a class="btn waves-effect waves-light brown" id="addbook"><i class="material-icons left">add</i>Add a Book</a>
+      </div>
       <div class="row">
         <% if (books === null) { %>
             <p class="flow-text center-align"> You have not added any book, click the button above to create one </p>
           <% } else { %>
           <% for (key in books) { %>
-            <div class="col s12 m3">
+            <div class="col s12 m4">
               <div class="card lime lighten-1">
                 <div class="card-image waves-effect waves-block waves-light">
-                  <img class="activator" src="/images/office.png" width="50" height="100">
+                  <img class="activator responsive-image" src="/images/office.png" height="100" width="100">
                 </div>
                 <div class="card-content">
-                  <span class="card-title activator grey-text text-darken-4"><%= books[key].title.substring(0, 16) %><i class="material-icons right">more_vert</i></span>
+                  <span class="card-title activator grey-text text-darken-4"><%= books[key].title.substring(0, 18) %><i class="material-icons right">more_vert</i></span>
                   <p>Author : <%= books[key].author %> </p>
                   <p>ISBN : <%= books[key].isbn %> </p>
-                  <p><a href="/admin/book/<%= books[key].title %>">Edit this Book</a></p>
+                  <a class="dark-blue lighten-1 btn waves-effect" href="/admin/book/<%= books[key].title %>">Edit this Book</a>
+                  <a  class="red lighten-2 btn waves-effect" href="/admin/deletebook/<%= books[key].title %>">Delete this Book</a>
                 </div>
                 <div class="card-reveal">
                   <span class="card-title grey-text text-darken-4"><%= books[key].title %><i class="material-icons right">close</i></span>
