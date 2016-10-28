@@ -66,10 +66,6 @@ main {
     font-size: 12;
 }
 
-dd {
-    margin-left: 5px;
-}
-
 input {
     height: 30px;
 }
@@ -96,24 +92,6 @@ input {
     font-size: 1.2rem;
 }
 
-.active ul {
-    top: auto !important;
-}
-
-#slide-out {
-    background-color: #412234;
-    overflow-y: hidden;
-}
-
-.side-nav a {
-    padding: none;
-    margin-left: 30px;
-}
-
-.side-nav li {
-    list-style: none;
-}
-
 .header-dropdown {
     top: auto !important;
 }
@@ -131,15 +109,6 @@ input {
     width: 80%;
 }
 
-.book-image {
-    width: 100px;
-    height: 150px;
-}
-
-.side-nav {
-    top: 0;
-    left: 0;
-}
 
 .rounded-image {
     border-radius: 50%;
@@ -172,4 +141,8 @@ input {
 #show-profile {
     padding-top: 30px;
     margin: auto;
+}
+
+footer{
+    bottom: 0;
 }

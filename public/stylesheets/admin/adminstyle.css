@@ -3,3 +3,22 @@ header,
     footer {
         padding-left: 300px;
     }
+
+#slide-out {
+    background-color: #412234;
+    overflow-y: hidden;
+}
+
+.side-nav a {
+    padding: none;
+    margin-left: 30px;
+}
+
+.side-nav li {
+    list-style: none;
+}
+
+.side-nav {
+    top: 0;
+    left: 0;
+}
